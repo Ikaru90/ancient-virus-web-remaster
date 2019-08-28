@@ -1,4 +1,7 @@
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+console.log(path.join(__dirname, '../src'));
 
 module.exports = {
   entry: './src/js/index.js',
@@ -9,6 +12,7 @@ module.exports = {
   ],
   devtool: "eval-source-map",
   devServer: {
+    contentBase: path.join(__dirname, '../src'),
     port: 3000
   },
   module: {

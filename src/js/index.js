@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
-import { LoadScene } from './scenes/loadScene';
+import { PreloadScene } from './scenes/preloadScene';
+import { LoadingScene } from './scenes/loadingScene';
 import { MenuScene } from './scenes/menuScene';
+import { CreatorsScene } from './scenes/creatorsScene';
+import { LevelOneIntro } from './scenes/levelOneIntro';
 import '../css/reset.css';
 
 const config = {
@@ -11,7 +14,13 @@ const config = {
     width: 1024,
     height: 768,
   },  
-  scene: [ LoadScene, MenuScene ]
+  scene: [
+    PreloadScene,
+    LoadingScene,
+    MenuScene,
+    CreatorsScene,
+    LevelOneIntro
+  ]
 };
 
-const game = new Phaser.Game(config);
+new Phaser.Game(config);
