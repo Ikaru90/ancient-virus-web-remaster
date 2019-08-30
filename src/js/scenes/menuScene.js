@@ -4,6 +4,7 @@ export class MenuScene extends Phaser.Scene {
   constructor() {
     super({ key: SCENES.MENU })
   }
+
   create() {
     const fontStyle = { fontFamily: 'Verdana', fontStyle: 'bold', fontSize: 40 };
 
@@ -24,7 +25,7 @@ export class MenuScene extends Phaser.Scene {
     });
     newGameButton.on('pointerup', () => {
       this.sound.stopAll();
-      this.scene.switch(SCENES.LEVEL_ONE_INTRO);
+      this.scene.switch(SCENES.LEVEL_INTRO);
       this.sound.play('music00');
     });
 

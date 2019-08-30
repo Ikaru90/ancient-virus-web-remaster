@@ -3,5 +3,5 @@ export const SCENES = {
   LOADING: 'loading',
   MENU: 'menu',
   СREATORS: 'creators',
-  LEVEL_ONE_INTRO: 'levelOneIntro'
+  LEVEL_INTRO: 'levelIntro'
 };

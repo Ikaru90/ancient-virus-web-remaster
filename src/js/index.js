@@ -3,7 +3,7 @@ import { PreloadScene } from './scenes/preloadScene';
 import { LoadingScene } from './scenes/loadingScene';
 import { MenuScene } from './scenes/menuScene';
 import { CreatorsScene } from './scenes/creatorsScene';
-import { LevelOneIntro } from './scenes/levelOneIntro';
+import { LevelIntro } from './scenes/levelIntro';
 import '../css/reset.css';
 
 const config = {
@@ -19,7 +19,7 @@ const config = {
     LoadingScene,
     MenuScene,
     CreatorsScene,
-    LevelOneIntro
+    LevelIntro
   ]
 };
 

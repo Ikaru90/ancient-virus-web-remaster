@@ -1,9 +1,11 @@
 import { SCENES } from './const';
 
-export class LevelOneIntro extends Phaser.Scene {
+export class LevelIntro extends Phaser.Scene {
   constructor() {
-    super({ key: SCENES.LEVEL_ONE_INTRO })
+    super({ key: SCENES.LEVEL_INTRO });
+    this.keyboard;
   }
+
   create() {
     const whiteFontStyle = { fontFamily: 'Verdana', fontStyle: 'bold', fontSize: 20 };
     const redFontStyle = { fontFamily: 'Verdana', fontStyle: 'bold', fontSize: 14, color: 'red' };
@@ -22,11 +24,15 @@ export class LevelOneIntro extends Phaser.Scene {
     this.add.text(75, 550, 'вышел на улицу в поисках ответов...', whiteFontStyle);
     this.add.text(100, 650, 'Для продолжения нажмите ПРОБЕЛ', redFontStyle);
 
-    const keySPACE = this.scene.scene.input.keyboard.addKey('SPACE');
-    keySPACE.on('down', () => {
+    this.keyboard = this.input.keyboard.addKeys('SPACE');
+  }
+
+  update() {
+    if (this.keyboard.SPACE.isDown) {
       this.sound.stopAll();
+      this.scene.restart();
       this.scene.switch(SCENES.MENU);
       this.sound.play('mainTheme');
-    });
+    };
   }
 }
