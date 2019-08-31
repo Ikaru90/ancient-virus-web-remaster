@@ -1,22 +1,31 @@
+import { Bullet } from './bullet';
+
 export class Player {
   constructor(scene) {
     this.scene = scene;
-    this.scene.playerSprite = this.scene.physics.add.sprite(300, 300, 'player');
+    this.scene.playerSprite = this.scene.physics.add.sprite(300, 300, 'player').setImmovable(true);
     this.canFire = true;
-    this.scene.input.on("pointermove", (pointer) => {
-      this.worldX = pointer.worldX;
-      this.worldY = pointer.worldY;
-    });
+    this.pointer = this.scene.input.activePointer;
   }
 
   controlls()  {
     if (this.scene.playerSprite.active) {
 
-      let angle = Math.atan2(this.scene.playerSprite.y - this.worldY, this.scene.playerSprite.x - this.worldX);
-      angle = (angle < 0) ? angle + 2*Math.PI : angle;
+      let angle = Math.atan2(this.scene.playerSprite.y - this.pointer.y, this.scene.playerSprite.x - this.pointer.x);
+      angle = (angle < 0) ? angle + 2 * Math.PI : angle;
       angle = Math.floor(angle * 180 / Math.PI);
       if (angle || angle === 0) {
         this.scene.playerSprite.setAngle(angle);
+      }
+
+      if (this.pointer.isDown) {
+        if (this.canFire) {
+          new Bullet(this.scene);
+          this.canFire = false;
+          setTimeout(() => {
+            this.canFire = true;
+          }, 150);
+        }
       }
 
       if (this.scene.keyboard.A.isDown) {
