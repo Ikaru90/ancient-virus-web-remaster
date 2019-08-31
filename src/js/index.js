@@ -3,7 +3,8 @@ import { PreloadScene } from './scenes/preloadScene';
 import { LoadingScene } from './scenes/loadingScene';
 import { MenuScene } from './scenes/menuScene';
 import { CreatorsScene } from './scenes/creatorsScene';
-import { LevelIntro } from './scenes/levelIntro';
+import { LevelIntroScene } from './scenes/levelIntroScene';
+import { GameScene } from './scenes/gameScene';
 import '../css/reset.css';
 
 const config = {
@@ -13,13 +14,20 @@ const config = {
     // autoCenter: Phaser.DOM.CENTER_BOTH,
     width: 1024,
     height: 768,
-  },  
+  },
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: true
+    }
+  },
   scene: [
     PreloadScene,
     LoadingScene,
     MenuScene,
     CreatorsScene,
-    LevelIntro
+    LevelIntroScene,
+    GameScene
   ]
 };
 

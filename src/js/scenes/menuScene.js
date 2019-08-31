@@ -13,7 +13,7 @@ export class MenuScene extends Phaser.Scene {
 
     const newGameButton = this.add.text(390, 300, 'Новая игра', fontStyle);
     const creatorsButton = this.add.text(395, 380, 'Создатели', fontStyle);
-    this.sound.play('mainTheme');
+    // this.sound.play('mainTheme');
   
     newGameButton.setInteractive();
 
@@ -24,9 +24,9 @@ export class MenuScene extends Phaser.Scene {
       newGameButton.setColor('white');
     });
     newGameButton.on('pointerup', () => {
-      this.sound.stopAll();
+      // this.sound.stopAll();
       this.scene.switch(SCENES.LEVEL_INTRO);
-      this.sound.play('music00');
+      // this.sound.play('music00');
     });
 
     creatorsButton.setInteractive();

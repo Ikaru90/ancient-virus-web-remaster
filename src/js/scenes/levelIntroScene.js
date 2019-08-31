@@ -1,6 +1,6 @@
 import { SCENES } from './const';
 
-export class LevelIntro extends Phaser.Scene {
+export class LevelIntroScene extends Phaser.Scene {
   constructor() {
     super({ key: SCENES.LEVEL_INTRO });
     this.keyboard;
@@ -29,10 +29,10 @@ export class LevelIntro extends Phaser.Scene {
 
   update() {
     if (this.keyboard.SPACE.isDown) {
-      this.sound.stopAll();
+      // this.sound.stopAll();
       this.scene.restart();
-      this.scene.switch(SCENES.MENU);
-      this.sound.play('mainTheme');
+      this.scene.switch(SCENES.GAME);
+      // this.sound.play('mainTheme');
     };
   }
 }
