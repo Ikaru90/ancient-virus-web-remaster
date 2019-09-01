@@ -18,7 +18,7 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true
+      debug: false
     }
   },
   scene: [
@@ -27,7 +27,7 @@ const config = {
     MenuScene,
     CreatorsScene,
     LevelIntroScene,
-    GameScene
+    GameScene,
   ]
 };
 

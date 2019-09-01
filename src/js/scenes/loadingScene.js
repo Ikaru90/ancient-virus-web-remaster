@@ -27,6 +27,7 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   create() {
-    this.scene.switch(SCENES.MENU);
+    // this.scene.switch(SCENES.MENU);
+    this.scene.switch(SCENES.GAME);
   }
 }

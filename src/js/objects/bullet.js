@@ -1,21 +1,25 @@
-export class Bullet {
+export class Bullet extends Phaser.Physics.Arcade.Sprite {
   constructor(scene) {
-    this.scene = scene;
-    this.scene.bulletSprite = this.scene.physics.add.sprite(this.scene.playerSprite.x, this.scene.playerSprite.y, 'bullet');
-    this.scene.bullets.add(this.scene.bulletSprite);
+    super(scene, scene.player.x, scene.player.y, 'bullet');
+    scene.sys.updateList.add(this);
+    scene.sys.displayList.add(this);
+    scene.physics.world.enableBody(this);
+    this.setImmovable(true);
+    this.scene.bullets.add(this);
     this.move();
+    this.scene = scene;
   }
 
   move() {
-    if (this.scene.bulletSprite.active) {
-      this.scene.bulletSprite.setVelocityX(Math.cos(this.scene.playerSprite.angle * Math.PI / 180 ) * -1000);
-      this.scene.bulletSprite.setVelocityY(Math.sin(this.scene.playerSprite.angle * Math.PI / 180 ) * -1000);
+    if (this.active) {
+      this.setVelocityX(Math.cos(this.scene.player.angle * Math.PI / 180 ) * -1000);
+      this.setVelocityY(Math.sin(this.scene.player.angle * Math.PI / 180 ) * -1000);
 
-      if (this.scene.bulletSprite.x < 0 || this.scene.bulletSprite.x > 2048) {
-        this.scene.bulletSprite.destroy();
+      if (this.x < 0 || this.x > 2048) {
+        this.destroy();
       }
-      if (this.scene.bulletSprite.y < 0 || this.scene.bulletSprite.y > 2048) {
-        this.scene.bulletSprite.destroy();
+      if (this.y < 0 || this.y > 2048) {
+        this.destroy();
       }
     }
   }
