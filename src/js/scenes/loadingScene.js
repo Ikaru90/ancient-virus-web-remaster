@@ -10,6 +10,8 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image('background', './assets/system/background.jpg');
     this.load.image('logo', './assets/system/logo.png');
     this.load.image('player', './assets/system/player.png');
+    this.load.image('indicator', './assets/system/indicator.bmp');
+    this.load.image('panel', './assets/system/panel.bmp');
 
     this.load.spritesheet('alenDeath', './assets/sprites/alenDeath.png', { frameWidth: 64, frameHeight: 64, endFrame: 15 });
     this.load.spritesheet('alienMove', './assets/sprites/alienMove.png', { frameWidth: 64, frameHeight: 64, endFrame: 31 });

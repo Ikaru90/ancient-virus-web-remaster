@@ -1,6 +1,7 @@
 import { SCENES } from './const';
 import { Player } from '../objects/player';
 import { Alien } from '../objects/alien';
+import { Interface } from '../objects/interface';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -10,6 +11,7 @@ export class GameScene extends Phaser.Scene {
     this.bullets;
     this.enemys;
     this.alien;
+    this.interface;
   }
 
   create() {
@@ -39,14 +41,15 @@ export class GameScene extends Phaser.Scene {
     this.anims.create(alienMove);
 
     this.player = new Player(this, 512, 384);
+    this.interface = new Interface(this); 
 
-    for(let i = 0; i < 1; i ++) {
+    for(let i = 0; i < 5; i ++) {
       new Alien(this, 64 * i, 400);
     }
 
     this.physics.world.addCollider(this.player, this.enemys, (player, enemy) => {
       if (enemy.status === 'alive') {
-        // enemy.hit();
+        enemy.hit();
         if (player.HP <= 0) {
           player.destroy();
         }
@@ -60,7 +63,7 @@ export class GameScene extends Phaser.Scene {
         if (enemy.HP <= 0) {
           enemy.play('alenDeath');
           enemy.status = 'death';
-          this.player.XP += 100;
+          this.player.XP += 20;
         }
       }
     });
@@ -68,8 +71,9 @@ export class GameScene extends Phaser.Scene {
 
   update() {
     this.player.controlls();
-    for(let i = 0; i < this.enemys.getChildren().length; i++){
+    for(let i = 0; i < this.enemys.getChildren().length; i++) {
       this.enemys.getChildren()[i].moving();
     }
+    this.interface.update();
   }
 }

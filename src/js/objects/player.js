@@ -9,7 +9,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.setImmovable(true);
     this.setDepth(2);
   
+    this.level = 1;
     this.HP = 100;
+    this.maxHP = 200;
     this.XP = 0;
     this.canFire = true;
     this.cooldown = 750 // ms
@@ -46,6 +48,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.scene.cameras.main.scrollX > 0) {
           if (this.x - this.scene.cameras.main.scrollX <= 150) {
             this.scene.cameras.main.scrollX -= 3;
+            this.scene.interface.movingCamera();
           }
         }
       }
@@ -54,6 +57,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.scene.cameras.main.scrollX < 1536) {
           if (this.x - this.scene.cameras.main.scrollX >= 874) {
             this.scene.cameras.main.scrollX += 3;
+            this.scene.interface.movingCamera();
           }
         }
       }
@@ -62,6 +66,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.scene.cameras.main.scrollY > 0) {
           if (this.y - this.scene.cameras.main.scrollY <= 150) {
             this.scene.cameras.main.scrollY -= 3;
+            this.scene.interface.movingCamera();
           }
         }
       }
@@ -70,6 +75,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.scene.cameras.main.scrollY < 1280) {
           if (this.y - this.scene.cameras.main.scrollY >= 618) {
             this.scene.cameras.main.scrollY += 3;
+            this.scene.interface.movingCamera();
           }
         }
       }

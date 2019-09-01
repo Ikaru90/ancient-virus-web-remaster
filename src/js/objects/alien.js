@@ -31,7 +31,7 @@ export class Alien extends Phaser.Physics.Arcade.Sprite {
 
   hit() {
     if (this.canAttack) {
-      this.scene.player.HP -= 50;
+      this.scene.player.HP -= 10;
       this.canAttack = false;
       setTimeout(() => {
         this.canAttack = true;
