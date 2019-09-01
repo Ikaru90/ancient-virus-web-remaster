@@ -18,9 +18,11 @@ export class LoadingScene extends Phaser.Scene {
 
     this.load.image('grass', './assets/textures/grass.jpg');
 
+    this.load.audio('gunwav', './assets/snd/gun.wav');
     this.load.audio('kalashwav', './assets/snd/kalash.wav');
+    this.load.audio('meetwav', './assets/snd/meet.wav');
     
-    // this.load.audio('mainTheme', './assets/music/menu.mp3');
+    this.load.audio('mainTheme', './assets/music/menu.mp3');
     this.load.audio('music00', './assets/music/music00.mp3');
     // this.load.audio('music01', './assets/music/music01.mp3');
     // this.load.audio('music02', './assets/music/music02.mp3');

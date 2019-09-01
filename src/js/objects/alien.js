@@ -7,10 +7,11 @@ export class Alien extends Phaser.Physics.Arcade.Sprite {
     scene.enemys.add(this);
     this.status = 'alive';
     this.play('alienMov');
-    this.HP = 100;
+    this.HP = 10;
+    this.canAttack = true;
   }
 
-  attack() {
+  moving() {
     if (this.status === 'alive') {
       if ((Math.abs(this.y - this.scene.player.y) > 2) || (Math.abs(this.x - this.scene.player.x) > 2)) {
         let angle = Math.atan2(this.y - this.scene.player.y, this.x - this.scene.player.x);
@@ -25,6 +26,16 @@ export class Alien extends Phaser.Physics.Arcade.Sprite {
     } else {
       this.setVelocityX(0);
       this.setVelocityY(0);
+    }
+  }
+
+  hit() {
+    if (this.canAttack) {
+      this.scene.player.HP -= 50;
+      this.canAttack = false;
+      setTimeout(() => {
+        this.canAttack = true;
+      }, 1000);
     }
   }
 }

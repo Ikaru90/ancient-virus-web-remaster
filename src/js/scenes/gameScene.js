@@ -38,21 +38,29 @@ export class GameScene extends Phaser.Scene {
     this.anims.create(alenDeath);
     this.anims.create(alienMove);
 
-    this.player = new Player(this, 900, 430);
+    this.player = new Player(this, 512, 384);
 
     for(let i = 0; i < 1; i ++) {
       new Alien(this, 64 * i, 400);
     }
 
     this.physics.world.addCollider(this.player, this.enemys, (player, enemy) => {
+      if (enemy.status === 'alive') {
+        // enemy.hit();
+        if (player.HP <= 0) {
+          player.destroy();
+        }
+      }
     });
     this.physics.world.addCollider(this.bullets, this.enemys, (bullet, enemy) => {
       if (enemy.status === 'alive') {
         bullet.destroy();
         enemy.HP -= 10;
+        this.sound.play('meetwav', {volume: 0.2});
         if (enemy.HP <= 0) {
           enemy.play('alenDeath');
           enemy.status = 'death';
+          this.player.XP += 100;
         }
       }
     });
@@ -61,7 +69,7 @@ export class GameScene extends Phaser.Scene {
   update() {
     this.player.controlls();
     for(let i = 0; i < this.enemys.getChildren().length; i++){
-      this.enemys.getChildren()[i].attack();
+      this.enemys.getChildren()[i].moving();
     }
   }
 }

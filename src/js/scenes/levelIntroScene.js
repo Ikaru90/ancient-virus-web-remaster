@@ -29,10 +29,8 @@ export class LevelIntroScene extends Phaser.Scene {
 
   update() {
     if (this.keyboard.SPACE.isDown) {
-      // this.sound.stopAll();
       this.scene.restart();
       this.scene.switch(SCENES.GAME);
-      // this.sound.play('mainTheme');
     };
   }
 }

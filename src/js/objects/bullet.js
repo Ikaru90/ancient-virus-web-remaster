@@ -4,18 +4,18 @@ export class Bullet extends Phaser.Physics.Arcade.Sprite {
     scene.sys.updateList.add(this);
     scene.sys.displayList.add(this);
     scene.physics.world.enableBody(this);
+    this.scene = scene;
     this.setImmovable(true);
     this.scene.bullets.add(this);
-    this.move();
-    this.scene = scene;
+    this.moving();
   }
 
-  move() {
+  moving() {
     if (this.active) {
       this.setVelocityX(Math.cos(this.scene.player.angle * Math.PI / 180 ) * -1000);
-      this.setVelocityY(Math.sin(this.scene.player.angle * Math.PI / 180 ) * -1000);
+      this.setVelocityY(Math.sin(this.scene.player.angle * Math.PI / 180 ) * - 1000);
 
-      if (this.x < 0 || this.x > 2048) {
+      if (this.x < 0 || this.x > 2560) {
         this.destroy();
       }
       if (this.y < 0 || this.y > 2048) {
