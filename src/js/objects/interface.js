@@ -21,7 +21,7 @@ export class Interface {
     this.HPBarFill.fillRect(80, 5, 100, 15).setDepth(9);
 
     this.XPBar = scene.add.graphics({ lineStyle: { color: 0x000000 } });
-    this.XPBarFill = scene.add.graphics({ fillStyle: { color: 0xffff00 } });
+    this.XPBarFill = scene.add.graphics({ fillStyle: { color: 0xd4b800 } });
     this.XPBar.strokeRect(80, 25, 100, 15).setDepth(10);
     this.XPBarFill.fillRect(80, 25, 0, 15).setDepth(9);
   }
@@ -60,10 +60,13 @@ export class Interface {
   }
 
   update () {
+    const currentXP = (this.scene.player.XP / this.scene.player.maxXP * 100);
+    this.levelText.setText(this.scene.player.level);
     this.HPText.setText(`HP  ${this.scene.player.HP} / ${this.scene.player.maxHP}`);
+    this.XPText.setText(`XP  ${currentXP.toFixed(4)} %`);
     this.HPBarFill.clear();
     this.HPBarFill.fillRect(80, 5, Math.floor(this.scene.player.HP / this.scene.player.maxHP * 100), 15).setDepth(9);
     this.XPBarFill.clear();
-    this.XPBarFill.fillRect(80, 25, this.scene.player.XP, 15).setDepth(9);
+    this.XPBarFill.fillRect(80, 25, currentXP, 15).setDepth(9);
   }
 }

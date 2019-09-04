@@ -20,11 +20,11 @@ export class GameScene extends Phaser.Scene {
 
     for (let i = 0; i < 10; i ++ ) {
       for (let j = 0; j < 8; j ++ ) {
-        this.add.image(i * 256, j * 256, 'grass').setOrigin(0,0);
+        this.add.image(i * 256, j * 256, 'grass').setOrigin(0,0).setDepth(-1);
       }
     }
 
-    this.keyboard = this.input.keyboard.addKeys('A, D, W, S');
+    this.keyboard = this.input.keyboard.addKeys('A, D, W, S, Q');
 
     const alenDeath = {
       key: 'alenDeath',
@@ -43,8 +43,8 @@ export class GameScene extends Phaser.Scene {
     this.player = new Player(this, 512, 384);
     this.interface = new Interface(this); 
 
-    for(let i = 0; i < 5; i ++) {
-      new Alien(this, 64 * i, 400);
+    for(let i = 0; i < 30; i ++) {
+      new Alien(this, 10 * i, 400);
     }
 
     this.physics.world.addCollider(this.player, this.enemys, (player, enemy) => {
@@ -63,7 +63,11 @@ export class GameScene extends Phaser.Scene {
         if (enemy.HP <= 0) {
           enemy.play('alenDeath');
           enemy.status = 'death';
+          enemy.setDepth(1);
           this.player.XP += 20;
+          if (this.player.XP >= this.player.maxXP) {
+            this.player.levelUP();
+          }
         }
       }
     });

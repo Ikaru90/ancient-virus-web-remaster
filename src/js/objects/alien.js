@@ -5,6 +5,7 @@ export class Alien extends Phaser.Physics.Arcade.Sprite {
     scene.sys.displayList.add(this);
     scene.physics.world.enableBody(this);
     scene.enemys.add(this);
+    this.setDepth(2);
     this.status = 'alive';
     this.play('alienMov');
     this.HP = 10;
