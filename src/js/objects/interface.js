@@ -1,9 +1,21 @@
+import { Weapon } from './weapon';
+
 export class Interface {
   constructor(scene) {
     this.scene = scene;
     this.indicator = scene.add.image(0, 0, 'indicator').setOrigin(0,0).setDepth(10);
-
     this.panel = scene.add.image(674, 0, 'panel').setOrigin(0,0).setDepth(10);
+
+    this.inventory = scene.add.image(150, 150, 'inventory').setOrigin(0,0).setDepth(10);
+    this.inventory.visible = false;
+
+    this.inventarWeaponSlot;
+    this.inventoryImages = [];
+    this.inventoryWeapons = [
+      new Weapon('gun', 0),
+      new Weapon('kalashnikov', 5),
+      new Weapon('kalashnikov', 10),
+    ];
 
     this.levelText = scene.add.text(15, 20, scene.player.level, { fontSize: 25 }).setDepth(10);
     this.HPText = scene.add.text(55, 5, `HP  ${scene.player.HP}`, { fontSize: 15 }).setDepth(10);
@@ -12,8 +24,8 @@ export class Interface {
     this.AttackSpeedText = scene.add.text(905, 23, '0', { fontSize: 25 }).setDepth(10);
     this.DamageText = scene.add.text(993, 23, '0', { fontSize: 25 }).setDepth(10);
 
-    this.ArmorText = scene.add.text(763, 53, 'Броня: 0', { fontSize: 12 }).setDepth(10);
-    this.SpeedText = scene.add.text(860, 53, 'Скорость бега: 1.00', { fontSize: 12 }).setDepth(10);
+    this.ArmorText = scene.add.text(763, 53, `Броня: ${scene.player.armor}`, { fontSize: 12 }).setDepth(10);
+    this.SpeedText = scene.add.text(860, 53, `Скорость бега: ${scene.player.speed.toFixed(2)}`, { fontSize: 12 }).setDepth(10);
 
     this.HPBar = scene.add.graphics({ lineStyle: { color: 0x000000 } });
     this.HPBarFill = scene.add.graphics({ fillStyle: { color: 0xff0000 } });
@@ -33,6 +45,10 @@ export class Interface {
     this.indicator.y = y;
     this.panel.x = x + 674;
     this.panel.y = y;
+    this.panelWeaponSlot.x = x + 698;
+    this.panelWeaponSlot.y = y + 17;
+    this.inventory.x = x + 150;
+    this.inventory.y = y + 150;
     this.levelText.x = x + 15;
     this.levelText.y = y + 20;
     this.HPText.x = x + 55;
@@ -59,14 +75,105 @@ export class Interface {
     this.XPBarFill.y = y;
   }
 
-  update () {
+  update() {
     const currentXP = (this.scene.player.XP / this.scene.player.maxXP * 100);
     this.levelText.setText(this.scene.player.level);
+    this.ArmorText.setText(`Броня: ${this.scene.player.armor}`);
+    this.SpeedText.setText(`Скорость бега: ${this.scene.player.speed.toFixed(2)}`);
     this.HPText.setText(`HP  ${this.scene.player.HP} / ${this.scene.player.maxHP}`);
     this.XPText.setText(`XP  ${currentXP.toFixed(4)} %`);
+
+    this.AmmoText.setText(this.scene.player.ammo);
+    this.AttackSpeedText.setText(this.scene.player.attackSpeed);
+    this.DamageText.setText(this.scene.player.damage);
+
     this.HPBarFill.clear();
-    this.HPBarFill.fillRect(80, 5, Math.floor(this.scene.player.HP / this.scene.player.maxHP * 100), 15).setDepth(9);
+    this.HPBarFill.fillRect(80, 5, Math.floor(this.scene.player.HP / this.scene.player.maxHP * 100), 15);
     this.XPBarFill.clear();
-    this.XPBarFill.fillRect(80, 25, currentXP, 15).setDepth(9);
+    this.XPBarFill.fillRect(80, 25, currentXP, 15);
+  }
+
+  setInventoryWeaponsVisible(flag) {
+    if (flag) {
+      this.inventoryWeapons.forEach((item, index) => {
+        if (item.slot >= 0) {
+          const row = Math.floor(item.slot / 5);
+          const col = item.slot - row * 5;
+          this.inventoryImages.push(
+            this.scene.add.image(this.inventory.x + 9 + col * 43, this.inventory.y + 128 + row * 43, item.type)
+              .setOrigin(0,0)
+              .setDepth(10)
+              .setInteractive()
+              .on('pointerup', () => {this.onClickWeapon(item, index)})
+          );
+        } 
+        if (item.slot === -1) {
+          this.inventoryImages.push(
+            this.scene.add.image(this.inventory.x + 15, this.inventory.y + 40, item.type)
+              .setOrigin(0,0)
+              .setDepth(10)
+              .setInteractive()
+              .on('pointerup', () => {this.onClickWeapon(item, index)})
+          );
+        }
+      });
+    } else {
+      this.inventoryImages.forEach((image) => {
+        image.destroy();
+      });
+      this.inventoryImages = [];
+    }
+  }
+
+  onClickWeapon(weapon, index) {
+    if (weapon.equipped) {
+      weapon.equipped = false;
+      this.scene.player.attackSpeed = 0;
+      this.scene.player.damage = 0;
+      this.scene.player.ammo = 0;
+      this.scene.player.maxAmmo = 0;
+      this.scene.player.reloadSpeed = 0;
+      this.scene.player.speed = 1;
+      weapon.slot = this.findFirstEmptySlot();
+      const row = Math.floor(weapon.slot / 5);
+      const col = weapon.slot - row * 5;
+      this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
+      this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
+      this.panelWeaponSlot.destroy();
+    } else {
+      const equipedIndex = this.inventoryWeapons.findIndex((item) => item.slot === -1);
+      weapon.equipped = true;
+      weapon.slot = -1;
+      this.inventarWeaponSlot = weapon.type;
+      if (this.panelWeaponSlot) {
+        this.panelWeaponSlot.destroy();
+      }
+      this.panelWeaponSlot = this.scene.add.image(698, 17, weapon.type).setOrigin(0,0).setDepth(10);
+      if (equipedIndex !== -1) {
+        const newSlot = this.findFirstEmptySlot();
+        this.inventoryWeapons[equipedIndex].slot = newSlot;
+        const row = Math.floor(newSlot / 5);
+        const col = newSlot - row * 5;
+        this.inventoryImages[equipedIndex].x = this.inventory.x + 9 + col * 43; 
+        this.inventoryImages[equipedIndex].y = this.inventory.y + 128 + row * 43;
+        this.inventoryWeapons[equipedIndex].equipped = false;
+      } 
+      this.inventoryImages[index].x = this.inventory.x + 15;
+      this.inventoryImages[index].y = this.inventory.y + 40;
+      this.scene.player.attackSpeed = weapon.attackSpeed;
+      this.scene.player.damage = weapon.damage;
+      this.scene.player.ammo = weapon.ammo;
+      this.scene.player.maxAmmo = weapon.ammo;
+      this.scene.player.reloadSpeed = weapon.reloadSpeed;
+      this.scene.player.speed = 1 - weapon.speedPenalty;
+    }
+  }
+
+  findFirstEmptySlot() {
+    for (let i = 0; i < 25; i++ ) {
+      if (!this.inventoryWeapons.find((item) => item.slot === i)) {
+        return i;
+      }
+    }
   }
 }

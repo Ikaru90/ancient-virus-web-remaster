@@ -6,6 +6,7 @@ export class Alien extends Phaser.Physics.Arcade.Sprite {
     scene.physics.world.enableBody(this);
     scene.enemys.add(this);
     this.setDepth(2);
+    this.setScale(0.8 + ((Math.random().toFixed(2) / 2)));
     this.status = 'alive';
     this.play('alienMov');
     this.HP = 10;
@@ -23,7 +24,7 @@ export class Alien extends Phaser.Physics.Arcade.Sprite {
       } else {
         this.setVelocityX(0);
         this.setVelocityY(0);
-      } 
+      }
     } else {
       this.setVelocityX(0);
       this.setVelocityY(0);

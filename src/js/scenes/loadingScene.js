@@ -12,20 +12,25 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image('player', './assets/system/player.png');
     this.load.image('indicator', './assets/system/indicator.bmp');
     this.load.image('panel', './assets/system/panel.bmp');
+    this.load.image('inventory', './assets/system/inventory.bmp');
 
     this.load.spritesheet('alenDeath', './assets/sprites/alenDeath.png', { frameWidth: 64, frameHeight: 64, endFrame: 15 });
     this.load.spritesheet('alienMove', './assets/sprites/alienMove.png', { frameWidth: 64, frameHeight: 64, endFrame: 31 });
 
     this.load.image('bullet', './assets/bullets/bullet.png');
 
+    this.load.image('empty', './assets/weapons/empty.png');
+    this.load.image('gun', './assets/weapons/gun.png');
+    this.load.image('kalashnikov', './assets/weapons/kalashnikov.png');    
+
     this.load.image('grass', './assets/textures/grass.jpg');
 
     this.load.audio('gunwav', './assets/snd/gun.wav');
-    this.load.audio('kalashwav', './assets/snd/kalash.wav');
+    this.load.audio('kalashnikovwav', './assets/snd/kalashnikov.wav');
     this.load.audio('meetwav', './assets/snd/meet.wav');
-    
-    this.load.audio('mainTheme', './assets/music/menu.mp3');
-    this.load.audio('music00', './assets/music/music00.mp3');
+
+    // this.load.audio('mainTheme', './assets/music/menu.mp3');
+    // this.load.audio('music00', './assets/music/music00.mp3');
     // this.load.audio('music01', './assets/music/music01.mp3');
     // this.load.audio('music02', './assets/music/music02.mp3');
   }
