@@ -22,6 +22,7 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image('empty', './assets/weapons/empty.png');
     this.load.image('gun', './assets/weapons/gun.png');
     this.load.image('kalashnikov', './assets/weapons/kalashnikov.png');    
+    this.load.image('drop_kalashnikov', './assets/weapons/drop_kalashnikov.png');    
 
     this.load.image('grass', './assets/textures/grass.jpg');
 

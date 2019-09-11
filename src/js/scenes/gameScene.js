@@ -1,6 +1,7 @@
 import { SCENES } from './const';
 import { Player } from '../objects/player';
 import { Alien } from '../objects/alien';
+import { Drop } from '../objects/drop';
 import { Interface } from '../objects/interface';
 
 export class GameScene extends Phaser.Scene {
@@ -44,12 +45,16 @@ export class GameScene extends Phaser.Scene {
     this.player = new Player(this, 512, 384);
     this.interface = new Interface(this);
 
-    for(let i = 0; i < 2; i ++) {
-      for(let j = 0; j < 2; j ++) {
+    for(let i = 0; i < 5; i ++) {
+      for(let j = 0; j < 4; j ++) {
         new Alien(this, 1024 + 100 * i + Math.random() * 100, 768 + 100 * j + Math.random() * 100);
       }
     }
 
+    this.physics.world.addCollider(this.player, this.drop, (_player, drop) => {
+      this.interface.addNewItem(drop);
+      drop.destroy();
+    });
     this.physics.world.addCollider(this.player, this.enemys, (player, enemy) => {
       if (enemy.status === 'alive') {
         enemy.hit();
@@ -67,6 +72,9 @@ export class GameScene extends Phaser.Scene {
           enemy.play('alenDeath');
           enemy.status = 'death';
           enemy.setDepth(1);
+          if (Math.random() > 0.8) {
+            new Drop(this, enemy.x, enemy.y, 'drop_kalashnikov', 'gun', 'kalashnikov');
+          }
           this.player.XP += 20 / this.player.level;
           if (this.player.XP >= this.player.maxXP) {
             this.player.levelUP();

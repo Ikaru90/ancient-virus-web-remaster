@@ -11,11 +11,7 @@ export class Interface {
 
     this.equipedWeapon;
     this.inventoryImages = [];
-    this.inventoryWeapons = [
-      new Weapon('gun', 'gun', 0),
-      new Weapon('gun', 'kalashnikov', 1),
-      new Weapon('gun', 'kalashnikov', 2),
-    ];
+    this.inventoryWeapons = [new Weapon('gun', 'gun', 0)];
 
     this.levelText = scene.add.text(15, 20, scene.player.level, { fontSize: 25 }).setDepth(10);
     this.HPText = scene.add.text(55, 5, `HP  ${scene.player.HP}`, { fontSize: 15 }).setDepth(10);
@@ -173,8 +169,12 @@ export class Interface {
     }
   }
 
+  addNewItem(drop) {
+    this.inventoryWeapons.push(new Weapon(drop.type, drop.subtype, this.findFirstEmptySlot()));
+  }
+
   findFirstEmptySlot() {
-    for (let i = 0; i < 25; i++ ) {
+    for (let i = 0; i < 20; i++ ) {
       if (!this.inventoryWeapons.find((item) => item.slot === i)) {
         return i;
       }
