@@ -11,7 +11,8 @@ export class Interface {
 
     this.equipedWeapon;
     this.inventoryImages = [];
-    this.inventoryWeapons = [new Weapon('gun', 'gun', 0)];
+    this.inventoryWeapons = [new Weapon('gun', 'kalashnikov', 0)];
+    this.panelWeaponSlot = this.scene.add.image(698, 17, 'empty').setOrigin(0,0).setDepth(10);
 
     this.levelText = scene.add.text(15, 20, scene.player.level, { fontSize: 25 }).setDepth(10);
     this.HPText = scene.add.text(55, 5, `HP  ${scene.player.HP}`, { fontSize: 15 }).setDepth(10);
@@ -132,7 +133,7 @@ export class Interface {
       const col = weapon.slot - row * 5;
       this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
       this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
-      this.panelWeaponSlot.destroy();
+      this.panelWeaponSlot.setTexture('empty');
       this.scene.player.reloadBar.visible = false;
       this.scene.player.reloadFill.visible = false;
       return;
@@ -142,9 +143,9 @@ export class Interface {
       weapon.slot = -1;
       this.equipedWeapon = weapon;
       if (this.panelWeaponSlot) {
-        this.panelWeaponSlot.destroy();
+        this.panelWeaponSlot.setTexture('empty');
       }
-      this.panelWeaponSlot = this.scene.add.image(698, 17, weapon.subtype).setOrigin(0,0).setDepth(10);
+      this.panelWeaponSlot.setTexture(weapon.subtype);
       if (equipedIndex !== -1) {
         const newSlot = this.findFirstEmptySlot();
         this.inventoryWeapons[equipedIndex].slot = newSlot;

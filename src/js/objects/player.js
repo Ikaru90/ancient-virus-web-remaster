@@ -14,7 +14,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.XP = 0;
     this.maxXP = 100;
     this.attackDamage = 0;
-    this.armor = 0;
+    this.armor = 1;
     this.speed = 1.00;
     this.attackSpeed = 0;
     this.damage = 0;
@@ -24,6 +24,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.isInterfaceOpen = false;
     this.scene = scene;
     this.pointer = scene.input.activePointer;
+    this.levelUp = scene.add.sprite(this.x, this.y, 'levelUp');
+    this.levelUp.on('animationcomplete', this.animComplete, this);
+    this.levelUp.visible = false;
 
     this.reloadBar = scene.add.graphics({ lineStyle: { color: 0x000000 } });
     this.reloadFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
@@ -33,7 +36,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.reloadFill.visible = false;
   }
 
-  controlls()  {
+  animComplete() {
+    this.levelUp.visible = false;
+  }
+
+  controlls() {
     if (this.active) {
       const equipedWeapon = this.scene.interface.equipedWeapon;
       if (!this.isInterfaceOpen) {
@@ -64,8 +71,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             equipedWeapon.reloadProcess = 0;
             equipedWeapon.ammo = equipedWeapon.maxAmmo;
             equipedWeapon.isReload = false;
-            // this.reloadBar.visible = false;
-            // this.reloadFill.visible = false;
             this.reloadFill.clear();
           }
         }
@@ -75,8 +80,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             equipedWeapon.ammo -= 1;
             if (equipedWeapon.ammo === 0) {
               equipedWeapon.isReload = true;
-              // this.reloadBar.visible = true;
-              // this.reloadFill.visible = true;
             }
             new Bullet(this.scene);
             if (this.scene.interface.equipedWeapon.subtype === 'gun') {
@@ -93,6 +96,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         }
   
         if (this.scene.keyboard.A.isDown && this.x > 32) {
+          this.levelUp.x -= 2 * this.speed;
           this.x -= 2 * this.speed;
           this.reloadBar.x -= 2 * this.speed;
           this.reloadFill.x -= 2 * this.speed;
@@ -104,6 +108,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           }
         }
         if (this.scene.keyboard.D.isDown && this.x < 2528) {
+          this.levelUp.x += 2 * this.speed;
           this.x += 2 * this.speed;
           this.reloadBar.x += 2 * this.speed;
           this.reloadFill.x += 2 * this.speed;
@@ -115,6 +120,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           }
         }
         if (this.scene.keyboard.W.isDown && this.y > 32) {
+          this.levelUp.y -= 2 * this.speed;
           this.y -= 2 * this.speed;
           this.reloadBar.y -= 2 * this.speed;
           this.reloadFill.y -= 2 * this.speed;
@@ -126,6 +132,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           }
         }
         if (this.scene.keyboard.S.isDown && this.y < 2016) {
+          this.levelUp.y += 2 * this.speed;
           this.y += 2 * this.speed;
           this.reloadBar.y += 2 * this.speed;
           this.reloadFill.y += 2 * this.speed;
@@ -144,12 +151,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           this.isInterfaceOpen = false;
           this.scene.interface.inventory.visible = false;
           this.scene.interface.setInventoryWeaponsVisible(false);
+          this.scene.input.setDefaultCursor('url(assets/system/cursor.png), pointer');
         } else {
           this.scene.physics.pause();
           this.scene.anims.pauseAll();
           this.isInterfaceOpen = true;
           this.scene.interface.inventory.visible = true;
           this.scene.interface.setInventoryWeaponsVisible(true);
+          this.scene.input.setDefaultCursor('default');
         }
       }
     }
@@ -161,5 +170,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.XP = this.XP - this.maxXP;
     this.maxXP = this.maxXP * 2;
     this.level++;
+    this.levelUp.visible = true;
+    this.levelUp.play('levelUp');
   }
 }

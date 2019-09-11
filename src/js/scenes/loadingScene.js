@@ -13,15 +13,26 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image('indicator', './assets/system/indicator.bmp');
     this.load.image('panel', './assets/system/panel.bmp');
     this.load.image('inventory', './assets/system/inventory.bmp');
+    this.load.spritesheet('levelUp', './assets/system/levelUp.png', { frameWidth: 250, frameHeight: 250, endFrame: 15 });
 
     this.load.spritesheet('alenDeath', './assets/sprites/alenDeath.png', { frameWidth: 64, frameHeight: 64, endFrame: 15 });
     this.load.spritesheet('alienMove', './assets/sprites/alienMove.png', { frameWidth: 64, frameHeight: 64, endFrame: 31 });
+    this.load.spritesheet('zombieDeath', './assets/sprites/zombieDeath.png', { frameWidth: 64, frameHeight: 64, endFrame: 15 });
+    this.load.spritesheet('zombieMove', './assets/sprites/zombieMove.png', { frameWidth: 64, frameHeight: 64, endFrame: 31 });
+
+    this.load.spritesheet('spiderDeath', './assets/sprites/spiderDeath.png', { frameWidth: 64, frameHeight: 64, endFrame: 15 });
+    this.load.spritesheet('spiderMove', './assets/sprites/spiderMove.png', { frameWidth: 64, frameHeight: 64, endFrame: 15 });
+
+    this.load.spritesheet('lizardDeath', './assets/sprites/lizardDeath.png', { frameWidth: 64, frameHeight: 64, endFrame: 15 });
+    this.load.spritesheet('lizardMove', './assets/sprites/lizardMove.png', { frameWidth: 64, frameHeight: 64, endFrame: 15 });
+
+    this.load.spritesheet('iceMove', './assets/sprites/iceMove.png', { frameWidth: 75, frameHeight: 75, endFrame: 23 });
 
     this.load.image('bullet', './assets/bullets/bullet.png');
 
     this.load.image('empty', './assets/weapons/empty.png');
     this.load.image('gun', './assets/weapons/gun.png');
-    this.load.image('kalashnikov', './assets/weapons/kalashnikov.png');    
+    this.load.image('kalashnikov', './assets/weapons/kalashnikov.png');
     this.load.image('drop_kalashnikov', './assets/weapons/drop_kalashnikov.png');    
 
     this.load.image('grass', './assets/textures/grass.jpg');
