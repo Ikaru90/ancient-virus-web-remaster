@@ -7,7 +7,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     scene.sys.displayList.add(this);
     scene.physics.world.enableBody(this);
     this.setImmovable(true);
-    this.setDepth(3);
+    this.setDepth(4);
     this.level = 1;
     this.HP = 100;
     this.maxHP = 100;
@@ -20,9 +20,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.damage = 0;
     this.ammo = 0;
     this.maxAmmo = 0;
-    this.isReload = false;
-    this.reloadSpeed = 0;
-    this.reloadProcess = 0;
     this.canFire = true;
     this.isInterfaceOpen = false;
     this.scene = scene;
@@ -38,6 +35,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   controlls()  {
     if (this.active) {
+      const equipedWeapon = this.scene.interface.equipedWeapon;
       if (!this.isInterfaceOpen) {
         let angle = Math.atan2(
           this.y - this.scene.cameras.main.scrollY - this.pointer.y,
@@ -49,34 +47,42 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           this.setAngle(angle); 
         }
 
-        if (this.isReload) {
-          this.reloadProcess += 80 / (this.reloadSpeed / 16.6) ;
-          this.reloadFill.clear();
-          this.reloadFill.fillRect(512 - 40, 384 - 40, this.reloadProcess, 10).setDepth(9);
+        if (equipedWeapon && equipedWeapon.isReload) {
+          this.reloadBar.visible = true;
+          this.reloadFill.visible = true;
+        } else {
+          this.reloadBar.visible = false;
+          this.reloadFill.visible = false;
+        }
 
-          if (this.reloadProcess > 79 ) {
-            this.reloadProcess = 0;
-            this.ammo = this.maxAmmo;
-            this.isReload = false;
-            this.reloadBar.visible = false;
-            this.reloadFill.visible = false;
+        if (equipedWeapon && equipedWeapon.isReload) {
+          equipedWeapon.reloadProcess += 80 / (equipedWeapon.reloadSpeed / 16.6) ;
+          this.reloadFill.clear();
+          this.reloadFill.fillRect(512 - 40, 384 - 40, equipedWeapon.reloadProcess, 10).setDepth(9);
+
+          if (equipedWeapon.reloadProcess > 79 ) {
+            equipedWeapon.reloadProcess = 0;
+            equipedWeapon.ammo = equipedWeapon.maxAmmo;
+            equipedWeapon.isReload = false;
+            // this.reloadBar.visible = false;
+            // this.reloadFill.visible = false;
             this.reloadFill.clear();
           }
         }
   
         if (this.pointer.isDown) {
-          if (this.canFire && this.attackSpeed !== 0 && this.ammo > 0) {
-            this.ammo -= 1;
-            if (this.ammo === 0) {
-              this.isReload = true;
-              this.reloadBar.visible = true;
-              this.reloadFill.visible = true;
+          if (this.canFire && this.attackSpeed !== 0 && equipedWeapon.ammo > 0) {
+            equipedWeapon.ammo -= 1;
+            if (equipedWeapon.ammo === 0) {
+              equipedWeapon.isReload = true;
+              // this.reloadBar.visible = true;
+              // this.reloadFill.visible = true;
             }
             new Bullet(this.scene);
-            if (this.scene.interface.inventarWeaponSlot === 'gun') {
+            if (this.scene.interface.equipedWeapon.subtype === 'gun') {
               this.scene.sound.play('gunwav', {volume: 0.1});  
             }
-            if (this.scene.interface.inventarWeaponSlot === 'kalashnikov') {
+            if (this.scene.interface.equipedWeapon.subtype === 'kalashnikov') {
               this.scene.sound.play('kalashnikovwav', {volume: 0.1});
             }
             this.canFire = false;

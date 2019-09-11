@@ -1,23 +1,31 @@
 export class Weapon {
-  constructor(type, slot) {
-    this.slot = slot;
+  constructor(type, subtype, slot) {
     this.type = type;
+    this.subtype = subtype;
+    this.slot = slot;
     this.equipped = false;
 
     if (type === 'gun') {
-      this.damage = 5;
-      this.attackSpeed = 10;
-      this.ammo = 8;
-      this.reloadSpeed = 2000; // ms
-      this.speedPenalty = 0.10;
-    }
+      this.isReload = false;
+      this.reloadProcess = 0;
 
-    if (type === 'kalashnikov') {
-      this.damage = 10;
-      this.attackSpeed = 65;
-      this.ammo = 30;
-      this.reloadSpeed = 3000; // ms
-      this.speedPenalty = 0.25;
+      if (subtype === 'gun') {
+        this.damage = 5;
+        this.attackSpeed = 10;
+        this.ammo = 8;
+        this.maxAmmo = 8;
+        this.reloadSpeed = 2000; // ms
+        this.speedPenalty = 0.10;
+      }
+  
+      if (subtype === 'kalashnikov') {
+        this.damage = 10;
+        this.attackSpeed = 65;
+        this.ammo = 25;
+        this.maxAmmo = 25;
+        this.reloadSpeed = 3000; // ms
+        this.speedPenalty = 0.25;
+      }
     }
   }
 }

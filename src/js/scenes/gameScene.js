@@ -17,6 +17,7 @@ export class GameScene extends Phaser.Scene {
   create() {
     this.bullets = this.physics.add.group({ immovable: true });
     this.enemys = this.physics.add.group({ immovable: true });
+    this.drop = this.physics.add.group({ immovable: true });
 
     for (let i = 0; i < 10; i ++ ) {
       for (let j = 0; j < 8; j ++ ) {

@@ -9,12 +9,12 @@ export class Interface {
     this.inventory = scene.add.image(150, 150, 'inventory').setOrigin(0,0).setDepth(10);
     this.inventory.visible = false;
 
-    this.inventarWeaponSlot;
+    this.equipedWeapon;
     this.inventoryImages = [];
     this.inventoryWeapons = [
-      new Weapon('gun', 0),
-      new Weapon('kalashnikov', 5),
-      new Weapon('kalashnikov', 10),
+      new Weapon('gun', 'gun', 0),
+      new Weapon('gun', 'kalashnikov', 1),
+      new Weapon('gun', 'kalashnikov', 2),
     ];
 
     this.levelText = scene.add.text(15, 20, scene.player.level, { fontSize: 25 }).setDepth(10);
@@ -83,7 +83,7 @@ export class Interface {
     this.HPText.setText(`HP  ${this.scene.player.HP} / ${this.scene.player.maxHP}`);
     this.XPText.setText(`XP  ${currentXP.toFixed(4)} %`);
 
-    this.AmmoText.setText(this.scene.player.ammo);
+    this.AmmoText.setText(this.equipedWeapon && this.equipedWeapon.ammo || 0);
     this.AttackSpeedText.setText(this.scene.player.attackSpeed);
     this.DamageText.setText(this.scene.player.damage);
 
@@ -100,16 +100,16 @@ export class Interface {
           const row = Math.floor(item.slot / 5);
           const col = item.slot - row * 5;
           this.inventoryImages.push(
-            this.scene.add.image(this.inventory.x + 9 + col * 43, this.inventory.y + 128 + row * 43, item.type)
+            this.scene.add.image(this.inventory.x + 9 + col * 43, this.inventory.y + 128 + row * 43, item.subtype)
               .setOrigin(0,0)
               .setDepth(10)
               .setInteractive()
               .on('pointerup', () => {this.onClickWeapon(item, index)})
           );
-        } 
+        }
         if (item.slot === -1) {
           this.inventoryImages.push(
-            this.scene.add.image(this.inventory.x + 15, this.inventory.y + 40, item.type)
+            this.scene.add.image(this.inventory.x + 15, this.inventory.y + 40, item.subtype)
               .setOrigin(0,0)
               .setDepth(10)
               .setInteractive()
@@ -126,13 +126,10 @@ export class Interface {
   }
 
   onClickWeapon(weapon, index) {
-    if (weapon.equipped) {
-      weapon.equipped = false;
+    if (weapon.slot === -1) {
+      this.equipedWeapon = null;
       this.scene.player.attackSpeed = 0;
       this.scene.player.damage = 0;
-      this.scene.player.ammo = 0;
-      this.scene.player.maxAmmo = 0;
-      this.scene.player.reloadSpeed = 0;
       this.scene.player.speed = 1;
       weapon.slot = this.findFirstEmptySlot();
       const row = Math.floor(weapon.slot / 5);
@@ -140,15 +137,18 @@ export class Interface {
       this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
       this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
       this.panelWeaponSlot.destroy();
-    } else {
+      this.scene.player.reloadBar.visible = false;
+      this.scene.player.reloadFill.visible = false;
+      return;
+    }
+    if (weapon.slot >= 0 && weapon.type === 'gun') {
       const equipedIndex = this.inventoryWeapons.findIndex((item) => item.slot === -1);
-      weapon.equipped = true;
       weapon.slot = -1;
-      this.inventarWeaponSlot = weapon.type;
+      this.equipedWeapon = weapon;
       if (this.panelWeaponSlot) {
         this.panelWeaponSlot.destroy();
       }
-      this.panelWeaponSlot = this.scene.add.image(698, 17, weapon.type).setOrigin(0,0).setDepth(10);
+      this.panelWeaponSlot = this.scene.add.image(698, 17, weapon.subtype).setOrigin(0,0).setDepth(10);
       if (equipedIndex !== -1) {
         const newSlot = this.findFirstEmptySlot();
         this.inventoryWeapons[equipedIndex].slot = newSlot;
@@ -157,15 +157,19 @@ export class Interface {
         this.inventoryImages[equipedIndex].x = this.inventory.x + 9 + col * 43; 
         this.inventoryImages[equipedIndex].y = this.inventory.y + 128 + row * 43;
         this.inventoryWeapons[equipedIndex].equipped = false;
+        this.scene.player.reloadBar.visible = false;
+        this.scene.player.reloadFill.visible = false;
       } 
       this.inventoryImages[index].x = this.inventory.x + 15;
       this.inventoryImages[index].y = this.inventory.y + 40;
       this.scene.player.attackSpeed = weapon.attackSpeed;
       this.scene.player.damage = weapon.damage;
-      this.scene.player.ammo = weapon.ammo;
-      this.scene.player.maxAmmo = weapon.ammo;
-      this.scene.player.reloadSpeed = weapon.reloadSpeed;
       this.scene.player.speed = 1 - weapon.speedPenalty;
+      if (weapon.isReload) {
+        this.scene.player.reloadBar.visible = true;
+        this.scene.player.reloadFill.visible = true;
+      }
+      return;
     }
   }
 
