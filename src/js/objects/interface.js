@@ -11,7 +11,14 @@ export class Interface {
 
     this.equipedWeapon;
     this.inventoryImages = [];
-    this.inventoryWeapons = [new Weapon('gun', 'kalashnikov', 0)];
+    this.inventoryWeapons = [
+      new Weapon('gun', 'gun', 0),
+      new Weapon('gun', 'uzi', 1),
+      new Weapon('gun', 'kalashnikov', 2),
+      new Weapon('gun', 'minigun', 3),
+      new Weapon('gun', 'shotgun', 4),
+      new Weapon('gun', 'awp', 5),
+    ];
     this.panelWeaponSlot = this.scene.add.image(698, 17, 'empty').setOrigin(0,0).setDepth(10);
 
     this.levelText = scene.add.text(15, 20, scene.player.level, { fontSize: 25 }).setDepth(10);

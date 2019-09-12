@@ -81,12 +81,31 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             if (equipedWeapon.ammo === 0) {
               equipedWeapon.isReload = true;
             }
-            new Bullet(this.scene);
             if (this.scene.interface.equipedWeapon.subtype === 'gun') {
-              this.scene.sound.play('gunwav', {volume: 0.1});  
+              this.scene.sound.play('gunwav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet');
+            }
+            if (this.scene.interface.equipedWeapon.subtype === 'uzi') {
+              this.scene.sound.play('uziwav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet');
             }
             if (this.scene.interface.equipedWeapon.subtype === 'kalashnikov') {
               this.scene.sound.play('kalashnikovwav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet');
+            }
+            if (this.scene.interface.equipedWeapon.subtype === 'minigun') {
+              this.scene.sound.play('machinegunwav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet');
+            }
+            if (this.scene.interface.equipedWeapon.subtype === 'shotgun') {
+              this.scene.sound.play('drobashwav', {volume: 0.1});
+              for (let i = -3; i < 4; i ++) {
+                new Bullet(this.scene, 'bullet', i * 3);
+              }
+            }
+            if (this.scene.interface.equipedWeapon.subtype === 'awp') {
+              this.scene.sound.play('awpwav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet');
             }
             this.canFire = false;
             setTimeout(() => {

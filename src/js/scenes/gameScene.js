@@ -84,6 +84,21 @@ export class GameScene extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('levelUp'),
       frameRate: 30
     };
+    const boom = {
+      key: 'boom',
+      frames: this.anims.generateFrameNumbers('boom'),
+      frameRate: 30
+    };
+    const ion = {
+      key: 'ion',
+      frames: this.anims.generateFrameNumbers('ion'),
+      frameRate: 30
+    };
+    const plasma = {
+      key: 'plasma',
+      frames: this.anims.generateFrameNumbers('plasma'),
+      frameRate: 30
+    };
     this.anims.create(alenDeath); 
     this.anims.create(alienMove);
     this.anims.create(zombieDeath); 
@@ -94,6 +109,9 @@ export class GameScene extends Phaser.Scene {
     this.anims.create(lizardMove);
     this.anims.create(iceMove);
     this.anims.create(levelUp);
+    this.anims.create(boom);
+    this.anims.create(ion);
+    this.anims.create(plasma);
 
     this.player = new Player(this, 512, 384);
     this.interface = new Interface(this);
@@ -121,7 +139,9 @@ export class GameScene extends Phaser.Scene {
     });
     this.physics.world.addCollider(this.bullets, this.enemys, (bullet, enemy) => {
       if (enemy.status === 'alive') {
-        bullet.destroy();
+        if (this.interface.equipedWeapon.subtype !== 'awp') {
+          bullet.destroy();
+        }
         enemy.HP -= this.player.damage;
         this.sound.play('meetwav', {volume: 0.2});
         if (enemy.HP <= 0) {
@@ -139,10 +159,10 @@ export class GameScene extends Phaser.Scene {
           }
           enemy.status = 'death';
           enemy.setDepth(1);
-          if (Math.random() > 0.8) {
-            new Drop(this, enemy.x, enemy.y, 'drop_kalashnikov', 'gun', 'kalashnikov');
+          if (Math.random() > 0.1) {
+            new Drop(this, enemy.x, enemy.y, 'drop_shotgun', 'gun', 'shotgun');
           }
-          this.player.XP += 20 / this.player.level;
+          this.player.XP += 2 / this.player.level;
           if (this.player.XP >= this.player.maxXP) {
             this.player.levelUP();
           }
