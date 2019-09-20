@@ -36,23 +36,27 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image('empty', './assets/weapons/empty.png');
     this.load.image('gun', './assets/weapons/gun.png');
     this.load.image('uzi', './assets/weapons/uzi.png');
-    this.load.image('drop_uzi', './assets/weapons/drop_uzi.png');
     this.load.image('kalashnikov', './assets/weapons/kalashnikov.png');
-    this.load.image('drop_kalashnikov', './assets/weapons/drop_kalashnikov.png');
     this.load.image('minigun', './assets/weapons/minigun.png');
-    this.load.image('drop_minigun', './assets/weapons/drop_minigun.png');
     this.load.image('shotgun', './assets/weapons/shotgun.png');
-    this.load.image('drop_shotgun', './assets/weapons/drop_shotgun.png');    
     this.load.image('awp', './assets/weapons/awp.png');
-    this.load.image('drop_awp', './assets/weapons/drop_awp.png');
     this.load.image('rocketLauncher', './assets/weapons/rocketLauncher.png');
-    this.load.image('drop_rocketLauncher', './assets/weapons/drop_rocketLauncher.png');
     this.load.image('iongun', './assets/weapons/iongun.png');
-    this.load.image('drop_iongun', './assets/weapons/drop_iongun.png');
     this.load.image('plasmagun', './assets/weapons/plasmagun.png');
-    this.load.image('drop_plasmagun', './assets/weapons/drop_plasmagun.png');
-    this.load.image('rocketminigun', './assets/weapons/rocketminigun.png');
-    this.load.image('drop_rocketminigun', './assets/weapons/drop_rocketminigun.png');
+    this.load.image('rocketMinigun', './assets/weapons/rocketMinigun.png');
+
+    this.load.image('armor1', './assets/weapons/armor1.png');
+    this.load.image('armor2', './assets/weapons/armor2.png');
+    this.load.image('armor3', './assets/weapons/armor3.png');
+    this.load.image('armor4', './assets/weapons/armor4.png');
+    this.load.image('armor5', './assets/weapons/armor5.png');
+
+    this.load.image('chip1', './assets/weapons/chip1.bmp');
+    this.load.image('drop_chip1', './assets/weapons/drop_chip1.bmp');
+    this.load.image('chip2', './assets/weapons/chip2.bmp');
+    this.load.image('drop_chip2', './assets/weapons/drop_chip2.bmp');
+    this.load.image('chip3', './assets/weapons/chip3.bmp');
+    this.load.image('drop_chip3', './assets/weapons/drop_chip3.bmp');
 
     this.load.image('grass', './assets/textures/grass.jpg');
 

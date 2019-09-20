@@ -14,7 +14,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.XP = 0;
     this.maxXP = 100;
     this.attackDamage = 0;
-    this.armor = 1;
+    this.armor = 0;
     this.speed = 1.00;
     this.attackSpeed = 0;
     this.damage = 0;
@@ -27,6 +27,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.levelUp = scene.add.sprite(this.x, this.y, 'levelUp');
     this.levelUp.on('animationcomplete', this.animComplete, this);
     this.levelUp.visible = false;
+    this.setSize(35, 35);
 
     this.reloadBar = scene.add.graphics({ lineStyle: { color: 0x000000 } });
     this.reloadFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
@@ -51,7 +52,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         angle = (angle < 0) ? angle + 2 * Math.PI : angle;
         angle = Math.floor(angle * 180 / Math.PI);
         if (angle || angle === 0) {
-          this.setAngle(angle); 
+          this.setAngle(angle);
         }
 
         if (equipedWeapon && equipedWeapon.isReload) {
@@ -106,6 +107,22 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             if (this.scene.interface.equipedWeapon.subtype === 'awp') {
               this.scene.sound.play('awpwav', {volume: 0.1});
               new Bullet(this.scene, 'bullet');
+            }
+            if (this.scene.interface.equipedWeapon.subtype === 'rocketLauncher') {
+              this.scene.sound.play('rocketwav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet4');
+            }
+            if (this.scene.interface.equipedWeapon.subtype === 'rocketMinigun') {
+              this.scene.sound.play('rocketwav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet4');
+            }
+            if (this.scene.interface.equipedWeapon.subtype === 'iongun') {
+              this.scene.sound.play('ion1wav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet2');
+            }
+            if (this.scene.interface.equipedWeapon.subtype === 'plasmagun') {
+              this.scene.sound.play('ion2wav', {volume: 0.1});
+              new Bullet(this.scene, 'bullet3');
             }
             this.canFire = false;
             setTimeout(() => {

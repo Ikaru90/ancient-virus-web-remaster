@@ -7,6 +7,7 @@ export class Monster extends Phaser.Physics.Arcade.Sprite {
     scene.enemys.add(this);
     this.setDepth(3);
     this.setScale(0.8 + ((Math.random().toFixed(2) / 2)));
+    this.setSize(35, 35);
     this.status = 'alive';
     if (texture === 'alienMove') {
       this.play('alienMove');

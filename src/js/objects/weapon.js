@@ -62,6 +62,72 @@ export class Weapon {
         this.reloadSpeed = 8000; // ms
         this.speedPenalty = 0.50;
       }
+
+      if (subtype === 'rocketLauncher') {
+        this.damage = 25;
+        this.attackSpeed = 7;
+        this.ammo = 1;
+        this.maxAmmo = 1;
+        this.reloadSpeed = 1000; // ms
+        this.speedPenalty = 0.50;
+      }
+
+      if (subtype === 'rocketMinigun') {
+        this.damage = 10;
+        this.attackSpeed = 25;
+        this.ammo = 10;
+        this.maxAmmo = 10;
+        this.reloadSpeed = 5000; // ms
+        this.speedPenalty = 0.50;
+      }
+
+      if (subtype === 'iongun') {
+        this.damage = 15;
+        this.attackSpeed = 25;
+        this.ammo = 25;
+        this.maxAmmo = 25;
+        this.reloadSpeed = 5000; // ms
+        this.speedPenalty = 0.10;
+      }
+
+      if (subtype === 'plasmagun') {
+        this.damage = 15;
+        this.attackSpeed = 25;
+        this.ammo = 25;
+        this.maxAmmo = 25;
+        this.reloadSpeed = 5000; // ms
+        this.speedPenalty = 0.10;
+      }
+    }
+
+    if (type === 'armor') {
+      if (subtype === 'armor1') {
+        this.armor = 1;
+      }
+      if (subtype === 'armor2') {
+        this.armor = 2;
+      }
+      if (subtype === 'armor3') {
+        this.armor = 3;
+      }
+      if (subtype === 'armor4') {
+        this.armor = 4;
+      }
+      if (subtype === 'armor5') {
+        this.armor = 5;
+      }
+    }
+
+    if (type === 'chip') {
+      if (subtype === 'drop_chip1') {
+        this.damage = 5;
+      }
+      if (subtype === 'drop_chip2') {
+        this.armor = 2;
+      }
+      if (subtype === 'drop_chip3') {
+        this.speedPenalty = -0.15;
+      }
     }
   }
 }

@@ -18,6 +18,18 @@ export class Interface {
       new Weapon('gun', 'minigun', 3),
       new Weapon('gun', 'shotgun', 4),
       new Weapon('gun', 'awp', 5),
+      new Weapon('gun', 'rocketLauncher', 6),
+      new Weapon('gun', 'rocketMinigun', 7),
+      new Weapon('gun', 'iongun', 8),
+      new Weapon('gun', 'plasmagun', 9),
+      new Weapon('armor', 'armor1', 10),
+      new Weapon('armor', 'armor2', 11),
+      new Weapon('armor', 'armor3', 12),
+      new Weapon('armor', 'armor4', 13),
+      new Weapon('armor', 'armor5', 14),
+      new Weapon('chip', 'drop_chip1', 15),
+      new Weapon('chip', 'drop_chip2', 16),
+      new Weapon('chip', 'drop_chip3', 17),
     ];
     this.panelWeaponSlot = this.scene.add.image(698, 17, 'empty').setOrigin(0,0).setDepth(10);
 
@@ -120,6 +132,34 @@ export class Interface {
               .on('pointerup', () => {this.onClickWeapon(item, index)})
           );
         }
+        if (item.slot === -2) {
+          this.inventoryImages.push(
+            this.scene.add.image(this.inventory.x + 70, this.inventory.y + 40, item.subtype)
+              .setOrigin(0,0)
+              .setDepth(10)
+              .setInteractive()
+              .on('pointerup', () => {this.onClickWeapon(item, index)})
+          );
+        }
+        if (item.slot === -3) {
+          let texture;
+          if (item.subtype === 'drop_chip1') {
+            texture = 'chip1'
+          }
+          if (item.subtype === 'drop_chip2') {
+            texture = 'chip2'
+          }
+          if (item.subtype === 'drop_chip3') {
+            texture = 'chip3'
+          }
+          this.inventoryImages.push(
+            this.scene.add.image(this.inventory.x + 120, this.inventory.y + 11, texture)
+              .setOrigin(0,0)
+              .setDepth(10)
+              .setInteractive()
+              .on('pointerup', () => {this.onClickWeapon(item, index)})
+          );
+        }
       });
     } else {
       this.inventoryImages.forEach((image) => {
@@ -131,19 +171,22 @@ export class Interface {
 
   onClickWeapon(weapon, index) {
     if (weapon.slot === -1) {
-      this.equipedWeapon = null;
-      this.scene.player.attackSpeed = 0;
-      this.scene.player.damage = 0;
-      this.scene.player.speed = 1;
-      weapon.slot = this.findFirstEmptySlot();
-      const row = Math.floor(weapon.slot / 5);
-      const col = weapon.slot - row * 5;
-      this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
-      this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
-      this.panelWeaponSlot.setTexture('empty');
-      this.scene.player.reloadBar.visible = false;
-      this.scene.player.reloadFill.visible = false;
-      return;
+      const slot = this.findFirstEmptySlot();
+      if (slot) {
+        this.equipedWeapon = null;
+        this.scene.player.attackSpeed = 0;
+        this.scene.player.damage = 0;
+        this.scene.player.speed = 1;
+        weapon.slot = slot;
+        const row = Math.floor(weapon.slot / 5);
+        const col = weapon.slot - row * 5;
+        this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
+        this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
+        this.panelWeaponSlot.setTexture('empty');
+        this.scene.player.reloadBar.visible = false;
+        this.scene.player.reloadFill.visible = false;
+        return;
+      }
     }
     if (weapon.slot >= 0 && weapon.type === 'gun') {
       const equipedIndex = this.inventoryWeapons.findIndex((item) => item.slot === -1);
@@ -160,7 +203,6 @@ export class Interface {
         const col = newSlot - row * 5;
         this.inventoryImages[equipedIndex].x = this.inventory.x + 9 + col * 43; 
         this.inventoryImages[equipedIndex].y = this.inventory.y + 128 + row * 43;
-        this.inventoryWeapons[equipedIndex].equipped = false;
         this.scene.player.reloadBar.visible = false;
         this.scene.player.reloadFill.visible = false;
       } 
@@ -175,10 +217,154 @@ export class Interface {
       }
       return;
     }
+
+    if (weapon.slot === -2) {
+      const slot = this.findFirstEmptySlot();
+      if (slot) {
+        weapon.slot = slot;
+        this.scene.player.armor = 0;
+        const row = Math.floor(weapon.slot / 5);
+        const col = weapon.slot - row * 5;
+        this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
+        this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
+        return;
+      }
+      return;
+    }
+    if (weapon.slot >= 0 && weapon.type === 'armor') {
+      const equipedIndex = this.inventoryWeapons.findIndex((item) => item.slot === -2);
+      weapon.slot = -2;
+      if (equipedIndex !== -1) {
+        const newSlot = this.findFirstEmptySlot();
+        this.inventoryWeapons[equipedIndex].slot = newSlot;
+        const row = Math.floor(newSlot / 5);
+        const col = newSlot - row * 5;
+        this.inventoryImages[equipedIndex].x = this.inventory.x + 9 + col * 43; 
+        this.inventoryImages[equipedIndex].y = this.inventory.y + 128 + row * 43;
+      } 
+      this.inventoryImages[index].x = this.inventory.x + 70;
+      this.inventoryImages[index].y = this.inventory.y + 40;
+      this.scene.player.armor = weapon.armor;
+      return;
+    }
+
+    if (weapon.slot === -3) {
+      const slot = this.findFirstEmptySlot();
+      if (slot) {
+        let texture;
+        if (weapon.subtype === 'drop_chip1') {
+          texture = 'drop_chip1'
+        }
+        if (weapon.subtype === 'drop_chip2') {
+          texture = 'drop_chip2'
+        }
+        if (weapon.subtype === 'drop_chip3') {
+          texture = 'drop_chip3'
+        }
+        weapon.slot = slot;
+        this.scene.player.armor = 0;
+        const row = Math.floor(weapon.slot / 5);
+        const col = weapon.slot - row * 5;
+        this.inventoryImages[index].setTexture(texture);
+        this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
+        this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
+        return;
+      }
+      return;
+    }
+    if (weapon.slot === -4) {
+      const slot = this.findFirstEmptySlot();
+      if (slot) {
+        let texture;
+        if (weapon.subtype === 'drop_chip1') {
+          texture = 'drop_chip1'
+        }
+        if (weapon.subtype === 'drop_chip2') {
+          texture = 'drop_chip2'
+        }
+        if (weapon.subtype === 'drop_chip3') {
+          texture = 'drop_chip3'
+        }
+        weapon.slot = slot;
+        this.scene.player.armor = 0;
+        const row = Math.floor(weapon.slot / 5);
+        const col = weapon.slot - row * 5;
+        this.inventoryImages[index].setTexture(texture);
+        this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
+        this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
+        return;
+      }
+      return;
+    }
+    if (weapon.slot === -5) {
+      const slot = this.findFirstEmptySlot();
+      if (slot) {
+        let texture;
+        if (weapon.subtype === 'drop_chip1') {
+          texture = 'drop_chip1'
+        }
+        if (weapon.subtype === 'drop_chip2') {
+          texture = 'drop_chip2'
+        }
+        if (weapon.subtype === 'drop_chip3') {
+          texture = 'drop_chip3'
+        }
+        weapon.slot = slot;
+        this.scene.player.armor = 0;
+        const row = Math.floor(weapon.slot / 5);
+        const col = weapon.slot - row * 5;
+        this.inventoryImages[index].setTexture(texture);
+        this.inventoryImages[index].x = this.inventory.x + 9 + col * 43; 
+        this.inventoryImages[index].y = this.inventory.y + 128 + row * 43;
+        return;
+      }
+      return;
+    }
+
+    if (weapon.slot >= 0 && weapon.type === 'chip') {
+      const equipedIndex = this.inventoryWeapons.findIndex((item) => item.slot === -3);
+      weapon.slot = -3;
+      if (equipedIndex !== -1) {
+        const newSlot = this.findFirstEmptySlot();
+        this.inventoryWeapons[equipedIndex].slot = newSlot;
+        const row = Math.floor(newSlot / 5);
+        const col = newSlot - row * 5;
+        let texture;
+        if (weapon.subtype === 'drop_chip1') {
+          texture = 'drop_chip1'
+        }
+        if (weapon.subtype === 'drop_chip2') {
+          texture = 'drop_chip2'
+        }
+        if (weapon.subtype === 'drop_chip3') {
+          texture = 'drop_chip3'
+        }
+        this.inventoryImages[equipedIndex].setTexture(texture);
+        this.inventoryImages[equipedIndex].x = this.inventory.x + 9 + col * 43; 
+        this.inventoryImages[equipedIndex].y = this.inventory.y + 128 + row * 43;
+      }
+      let texture;
+      if (weapon.subtype === 'drop_chip1') {
+        texture = 'chip1'
+      }
+      if (weapon.subtype === 'drop_chip2') {
+        texture = 'chip2'
+      }
+      if (weapon.subtype === 'drop_chip3') {
+        texture = 'chip3'
+      }
+      this.inventoryImages[index].setTexture(texture);
+      this.inventoryImages[index].x = this.inventory.x + 120;
+      this.inventoryImages[index].y = this.inventory.y + 11;
+    }
   }
 
   addNewItem(drop) {
-    this.inventoryWeapons.push(new Weapon(drop.type, drop.subtype, this.findFirstEmptySlot()));
+    const slot = this.findFirstEmptySlot();
+    console.log(slot);
+    if (slot) {
+      this.inventoryWeapons.push(new Weapon(drop.type, drop.subtype, slot));
+    }
   }
 
   findFirstEmptySlot() {

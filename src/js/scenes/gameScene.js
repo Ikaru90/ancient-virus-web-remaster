@@ -2,6 +2,7 @@ import { SCENES } from './const';
 import { Player } from '../objects/player';
 import { Monster } from '../objects/monster';
 import { Drop } from '../objects/drop';
+import { Effect } from '../objects/effect';
 import { Interface } from '../objects/interface';
 
 export class GameScene extends Phaser.Scene {
@@ -19,6 +20,7 @@ export class GameScene extends Phaser.Scene {
     this.input.setDefaultCursor('url(assets/system/cursor.png), pointer');
     this.bullets = this.physics.add.group({ immovable: true });
     this.enemys = this.physics.add.group({ immovable: true });
+    this.effects = this.physics.add.group({ immovable: true });
     this.drop = this.physics.add.group({ immovable: true });
 
     for (let i = 0; i < 10; i ++ ) {
@@ -87,7 +89,7 @@ export class GameScene extends Phaser.Scene {
     const boom = {
       key: 'boom',
       frames: this.anims.generateFrameNumbers('boom'),
-      frameRate: 30
+      frameRate: 40
     };
     const ion = {
       key: 'ion',
@@ -125,11 +127,21 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
+    this.physics.world.addOverlap(this.enemys, this.effects, (enemy, effects) => {
+      if (enemy.status === 'alive') {
+        if (effects.texture.key === 'boom') {
+          enemy.HP -= this.player.damage;
+          effects.setSize(1, 1, effects.x + 50, effects.y + 50, 1);
+          this.checkEnemy(enemy);
+        }
+      }
+    });
+
     this.physics.world.addCollider(this.player, this.drop, (_player, drop) => {
       this.interface.addNewItem(drop);
       drop.destroy();
     });
-    this.physics.world.addCollider(this.player, this.enemys, (player, enemy) => {
+    this.physics.world.addOverlap(this.player, this.enemys, (player, enemy) => {
       if (enemy.status === 'alive') {
         enemy.hit();
         if (player.HP <= 0) {
@@ -142,39 +154,64 @@ export class GameScene extends Phaser.Scene {
         if (this.interface.equipedWeapon.subtype !== 'awp') {
           bullet.destroy();
         }
-        enemy.HP -= this.player.damage;
-        this.sound.play('meetwav', {volume: 0.2});
-        if (enemy.HP <= 0) {
-          if (enemy.texture.key === 'alienMove') {
-            enemy.play('alenDeath');
-          }
-          if (enemy.texture.key === 'zombieMove') {
-            enemy.play('zombieDeath');
-          }
-          if (enemy.texture.key === 'spiderMove') {
-            enemy.play('spiderDeath');
-          }
-          if (enemy.texture.key === 'lizardMove') {
-            enemy.play('lizardDeath');
-          }
-          enemy.status = 'death';
-          enemy.setDepth(1);
-          if (Math.random() > 0.1) {
-            new Drop(this, enemy.x, enemy.y, 'drop_shotgun', 'gun', 'shotgun');
-          }
-          this.player.XP += 2 / this.player.level;
-          if (this.player.XP >= this.player.maxXP) {
-            this.player.levelUP();
-          }
-          if (enemy.texture.key === 'iceMove') {
-            enemy.destroy();
-          }
+        if (this.interface.equipedWeapon.subtype === 'rocketLauncher') {
+          this.effects.add(new Effect(this, bullet, 'boom' , 200, 200, 1));
+          this.sound.play('explodewav', {volume: 0.1});
         }
+        if (this.interface.equipedWeapon.subtype === 'rocketMinigun') {
+          this.effects.add(new Effect(this, bullet, 'boom' , 100, 100, 0.5));
+          this.sound.play('explodewav', {volume: 0.1});
+        }
+        if (this.interface.equipedWeapon.subtype !== 'rocketMinigun' && this.interface.equipedWeapon.subtype !== 'rocketLauncher') {
+          enemy.HP -= this.player.damage;
+          if (this.interface.equipedWeapon.subtype === 'iongun') {
+            this.effects.add(new Effect(this, bullet, 'ion' , 250, 250, 1));
+          }
+          if (this.interface.equipedWeapon.subtype === 'plasmagun') {
+            this.effects.add(new Effect(this, bullet, 'plasma' , 250, 250, 1));
+          }
+          this.sound.play('meetwav', {volume: 0.2});
+        }
+        this.checkEnemy(enemy);
       }
     });
   }
 
+  checkEnemy(enemy) {
+    if (enemy.HP <= 0) {
+      if (enemy.texture.key === 'alienMove') {
+        enemy.play('alenDeath');
+      }
+      if (enemy.texture.key === 'zombieMove') {
+        enemy.play('zombieDeath');
+      }
+      if (enemy.texture.key === 'spiderMove') {
+        enemy.play('spiderDeath');
+      }
+      if (enemy.texture.key === 'lizardMove') {
+        enemy.play('lizardDeath');
+      }
+      enemy.status = 'death';
+      enemy.setDepth(1);
+      if (Math.random() > 0.1) {
+        new Drop(this, enemy.x, enemy.y, 'shotgun', 'gun', 'shotgun');
+      }
+      this.player.XP += 2 / this.player.level;
+      if (this.player.XP >= this.player.maxXP) {
+        this.player.levelUP();
+      }
+      if (enemy.texture.key === 'iceMove') {
+        enemy.destroy();
+      }
+    }
+  }
+
   update() {
+    // console.log('bullets: ', this.bullets.getChildren().length);
+    // console.log('enemys: ', this.enemys.getChildren().length);
+    // console.log('effects: ', this.effects.getChildren().length);
+    // console.log('drop: ', this.drop.getChildren().length);
+
     this.player.controlls();
     for(let i = 0; i < this.enemys.getChildren().length; i++) {
       for(let j = 0; j < this.enemys.getChildren().length; j++) {
@@ -196,6 +233,19 @@ export class GameScene extends Phaser.Scene {
         }
       }
       this.enemys.getChildren()[i].moving();
+    }
+    for(let i = 0; i < this.bullets.getChildren().length; i++) {
+      if (this.bullets.getChildren()[i]) {
+        if (this.bullets.getChildren()[i].x < 0 || this.bullets.getChildren()[i].x > 2560) {
+          this.bullets.getChildren()[i].destroy();
+        }
+      }
+      if (this.bullets.getChildren()[i]) {
+        if (this.bullets.getChildren()[i].y < 0 || this.bullets.getChildren()[i].y > 2048) {
+          this.bullets.getChildren()[i].destroy();
+        }
+      }
+      
     }
     this.interface.update();
   }
