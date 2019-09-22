@@ -1,5 +1,5 @@
 export class Bullet extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, texture, scatter ) {
+  constructor(scene, texture, scatter, equipedWeapon) {
     super(
       scene,
       scene.player.x + Math.cos(scene.player.angle * Math.PI / 180) * 20,
@@ -13,6 +13,8 @@ export class Bullet extends Phaser.Physics.Arcade.Sprite {
     this.setImmovable(true);
     this.scene.bullets.add(this);
     this.scatter = scatter || 0;
+    this.damage = equipedWeapon.damage;
+    this.subtype = equipedWeapon.subtype;
     this.moving();
   }
 

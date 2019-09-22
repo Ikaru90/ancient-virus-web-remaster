@@ -28,7 +28,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.levelUp.on('animationcomplete', this.animComplete, this);
     this.levelUp.visible = false;
     this.setSize(35, 35);
-
     this.reloadBar = scene.add.graphics({ lineStyle: { color: 0x000000 } });
     this.reloadFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
     this.reloadBar.strokeRect(this.x - 40, this.y - 40, 80, 10).setDepth(10);
@@ -82,47 +81,47 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             if (equipedWeapon.ammo === 0) {
               equipedWeapon.isReload = true;
             }
-            if (this.scene.interface.equipedWeapon.subtype === 'gun') {
+            if (equipedWeapon.subtype === 'gun') {
               this.scene.sound.play('gunwav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet');
+              new Bullet(this.scene, 'bullet', 0, equipedWeapon);
             }
             if (this.scene.interface.equipedWeapon.subtype === 'uzi') {
               this.scene.sound.play('uziwav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet');
+              new Bullet(this.scene, 'bullet', 0, equipedWeapon);
             }
             if (this.scene.interface.equipedWeapon.subtype === 'kalashnikov') {
               this.scene.sound.play('kalashnikovwav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet');
+              new Bullet(this.scene, 'bullet', 0, equipedWeapon);
             }
             if (this.scene.interface.equipedWeapon.subtype === 'minigun') {
               this.scene.sound.play('machinegunwav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet');
+              new Bullet(this.scene, 'bullet', 0, equipedWeapon);
             }
             if (this.scene.interface.equipedWeapon.subtype === 'shotgun') {
               this.scene.sound.play('drobashwav', {volume: 0.1});
               for (let i = -3; i < 4; i ++) {
-                new Bullet(this.scene, 'bullet', i * 3);
+                new Bullet(this.scene, 'bullet', i * 3, equipedWeapon);
               }
             }
             if (this.scene.interface.equipedWeapon.subtype === 'awp') {
               this.scene.sound.play('awpwav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet');
+              new Bullet(this.scene, 'bullet', 0, equipedWeapon);
             }
             if (this.scene.interface.equipedWeapon.subtype === 'rocketLauncher') {
               this.scene.sound.play('rocketwav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet4');
+              new Bullet(this.scene, 'bullet4', 0, equipedWeapon);
             }
             if (this.scene.interface.equipedWeapon.subtype === 'rocketMinigun') {
               this.scene.sound.play('rocketwav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet4');
+              new Bullet(this.scene, 'bullet4', 0, equipedWeapon);
             }
             if (this.scene.interface.equipedWeapon.subtype === 'iongun') {
               this.scene.sound.play('ion1wav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet2');
+              new Bullet(this.scene, 'bullet2', 0, equipedWeapon);
             }
             if (this.scene.interface.equipedWeapon.subtype === 'plasmagun') {
               this.scene.sound.play('ion2wav', {volume: 0.1});
-              new Bullet(this.scene, 'bullet3');
+              new Bullet(this.scene, 'bullet3', 0, equipedWeapon);
             }
             this.canFire = false;
             setTimeout(() => {

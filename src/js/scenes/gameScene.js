@@ -1,4 +1,16 @@
 import { SCENES } from './const';
+import {
+  getlevelTwo,
+  getlevelThree,
+  getlevelFour,
+  getlevelFive,
+  getlevelSix,
+  getlevelSeven,
+  getlevelEight,
+  getlevelNine,
+  getlevelTen,
+  getEndGame
+} from './levelConfig';
 import { Player } from '../objects/player';
 import { Monster } from '../objects/monster';
 import { Drop } from '../objects/drop';
@@ -22,10 +34,12 @@ export class GameScene extends Phaser.Scene {
     this.enemys = this.physics.add.group({ immovable: true });
     this.effects = this.physics.add.group({ immovable: true });
     this.drop = this.physics.add.group({ immovable: true });
+    this.textures = this.physics.add.group({ immovable: true });
+    this.level = 1;
 
     for (let i = 0; i < 10; i ++ ) {
       for (let j = 0; j < 8; j ++ ) {
-        this.add.image(i * 256, j * 256, 'grass').setOrigin(0,0).setDepth(-1);
+        this.textures.add(this.add.image(i * 256, j * 256, 'grass').setOrigin(0,0).setDepth(-1));
       }
     }
 
@@ -119,11 +133,8 @@ export class GameScene extends Phaser.Scene {
     this.interface = new Interface(this);
 
     for(let i = 0; i < 5; i ++) {
-      for(let j = 0; j < 4; j ++) {
-        const mob = Math.random() > 0.5 ?
-          Math.random() > 0.5 ? 'iceMove' : 'zombieMove' :
-          Math.random() > 0.5 ? 'lizardMove' : 'spiderMove';
-        new Monster(this, 1024 + 100 * i + Math.random() * 100, 768 + 100 * j + Math.random() * 100, mob);
+      for(let j = 0; j < 2; j ++) {
+        new Monster(this, 1024 + 100 * i + Math.random() * 100, 768 + 100 * j + Math.random() * 100, 'alienMove');
       }
     }
 
@@ -146,28 +157,30 @@ export class GameScene extends Phaser.Scene {
         enemy.hit();
         if (player.HP <= 0) {
           player.destroy();
+          this.scene.restart();
+          this.scene.switch(SCENES.LOSE);
         }
       }
     });
     this.physics.world.addCollider(this.bullets, this.enemys, (bullet, enemy) => {
       if (enemy.status === 'alive') {
-        if (this.interface.equipedWeapon.subtype !== 'awp') {
+        if (bullet.subtype !== 'awp') {
           bullet.destroy();
         }
-        if (this.interface.equipedWeapon.subtype === 'rocketLauncher') {
+        if (bullet.subtype === 'rocketLauncher') {
           this.effects.add(new Effect(this, bullet, 'boom' , 200, 200, 1));
           this.sound.play('explodewav', {volume: 0.1});
         }
-        if (this.interface.equipedWeapon.subtype === 'rocketMinigun') {
+        if (bullet.subtype === 'rocketMinigun') {
           this.effects.add(new Effect(this, bullet, 'boom' , 100, 100, 0.5));
           this.sound.play('explodewav', {volume: 0.1});
         }
-        if (this.interface.equipedWeapon.subtype !== 'rocketMinigun' && this.interface.equipedWeapon.subtype !== 'rocketLauncher') {
-          enemy.HP -= this.player.damage;
-          if (this.interface.equipedWeapon.subtype === 'iongun') {
+        if (bullet.subtype !== 'rocketMinigun' && bullet.subtype !== 'rocketLauncher') {
+          enemy.HP -= bullet.damage;
+          if (bullet.subtype === 'iongun') {
             this.effects.add(new Effect(this, bullet, 'ion' , 250, 250, 1));
           }
-          if (this.interface.equipedWeapon.subtype === 'plasmagun') {
+          if (bullet.subtype === 'plasmagun') {
             this.effects.add(new Effect(this, bullet, 'plasma' , 250, 250, 1));
           }
           this.sound.play('meetwav', {volume: 0.2});
@@ -193,25 +206,198 @@ export class GameScene extends Phaser.Scene {
       }
       enemy.status = 'death';
       enemy.setDepth(1);
-      if (Math.random() > 0.1) {
-        new Drop(this, enemy.x, enemy.y, 'shotgun', 'gun', 'shotgun');
+      if (Math.random() >= 0.90) {
+        if (this.player.level === 1) {
+          const dropRoll = Math.floor(Math.random() * 2);
+          switch (dropRoll) {
+            case 0: 
+              new Drop(this, enemy.x, enemy.y, 'uzi', 'gun', 'uzi');
+              break;
+            case 1: 
+              new Drop(this, enemy.x, enemy.y, 'kalashnikov', 'gun', 'kalashnikov');
+              break;
+          }
+        }
+
+        if (this.player.level === 2) {
+          const dropRoll = Math.floor(Math.random() * 4);
+          switch (dropRoll) {
+            case 0: 
+              new Drop(this, enemy.x, enemy.y, 'uzi', 'gun', 'uzi');
+              break;
+            case 1: 
+              new Drop(this, enemy.x, enemy.y, 'kalashnikov', 'gun', 'kalashnikov');
+              break;
+            case 2: 
+              new Drop(this, enemy.x, enemy.y, 'shotgun', 'gun', 'shotgun');
+              break;
+            case 3: 
+              new Drop(this, enemy.x, enemy.y, 'armor1', 'armor', 'armor1');
+              break;  
+          }
+        }  
+
+        if (this.player.level === 3) {
+          const dropRoll = Math.floor(Math.random() * 6);
+          switch (dropRoll) {
+            case 0: 
+              new Drop(this, enemy.x, enemy.y, 'uzi', 'gun', 'uzi');
+              break;
+            case 1: 
+              new Drop(this, enemy.x, enemy.y, 'kalashnikov', 'gun', 'kalashnikov');
+              break;
+            case 2: 
+              new Drop(this, enemy.x, enemy.y, 'shotgun', 'gun', 'shotgun');
+              break;
+            case 3: 
+              new Drop(this, enemy.x, enemy.y, 'awp', 'gun', 'awp');
+              break;   
+            case 4: 
+              new Drop(this, enemy.x, enemy.y, 'armor1', 'armor', 'armor1');
+              break;
+            case 5: 
+              new Drop(this, enemy.x, enemy.y, 'armor2', 'armor', 'armor2');
+              break;
+          }
+        }
+
+        if (this.player.level === 4) {
+          const dropRoll = Math.floor(Math.random() * 8);
+          switch (dropRoll) {
+            case 0: 
+              new Drop(this, enemy.x, enemy.y, 'uzi', 'gun', 'uzi');
+              break;
+            case 1: 
+              new Drop(this, enemy.x, enemy.y, 'kalashnikov', 'gun', 'kalashnikov');
+              break;
+            case 2: 
+              new Drop(this, enemy.x, enemy.y, 'shotgun', 'gun', 'shotgun');
+              break;
+            case 3: 
+              new Drop(this, enemy.x, enemy.y, 'awp', 'gun', 'awp');
+              break;
+            case 4: 
+              new Drop(this, enemy.x, enemy.y, 'minigun', 'gun', 'minigun');
+              break;
+            case 5: 
+              new Drop(this, enemy.x, enemy.y, 'armor1', 'armor', 'armor1');
+              break;
+            case 6: 
+              new Drop(this, enemy.x, enemy.y, 'armor2', 'armor', 'armor2');
+              break;
+            case 7: 
+              new Drop(this, enemy.x, enemy.y, 'armor3', 'armor', 'armor3');
+              break;  
+          }
+        }
+
+        if (this.player.level >= 5) {
+          const dropRoll = Math.floor(Math.random() * 17);
+          switch (dropRoll) {
+            case 0: 
+              new Drop(this, enemy.x, enemy.y, 'uzi', 'gun', 'uzi');
+              break;
+            case 1: 
+              new Drop(this, enemy.x, enemy.y, 'kalashnikov', 'gun', 'kalashnikov');
+              break;
+            case 2: 
+              new Drop(this, enemy.x, enemy.y, 'shotgun', 'gun', 'shotgun');
+              break;
+            case 3: 
+              new Drop(this, enemy.x, enemy.y, 'awp', 'gun', 'awp');
+              break;
+            case 4:
+              new Drop(this, enemy.x, enemy.y, 'minigun', 'gun', 'minigun');
+              break;
+            case 5: 
+              new Drop(this, enemy.x, enemy.y, 'rocketLauncher', 'gun', 'rocketLauncher');
+              break;
+            case 6: 
+              new Drop(this, enemy.x, enemy.y, 'rocketMinigun', 'gun', 'rocketMinigun');
+              break;
+            case 7: 
+              new Drop(this, enemy.x, enemy.y, 'iongun', 'gun', 'iongun');
+              break;
+            case 8: 
+              new Drop(this, enemy.x, enemy.y, 'plasmagun', 'gun', 'plasmagun');
+              break;  
+            case 9: 
+              new Drop(this, enemy.x, enemy.y, 'armor1', 'armor', 'armor1');
+              break;
+            case 10: 
+              new Drop(this, enemy.x, enemy.y, 'armor2', 'armor', 'armor2');
+              break;
+            case 11: 
+              new Drop(this, enemy.x, enemy.y, 'armor3', 'armor', 'armor3');
+              break;
+            case 12: 
+              new Drop(this, enemy.x, enemy.y, 'armor4', 'armor', 'armor4');
+              break; 
+            case 13: 
+              new Drop(this, enemy.x, enemy.y, 'armor5', 'armor', 'armor5');
+              break;
+            case 14: 
+              new Drop(this, enemy.x, enemy.y, 'drop_chip1', 'chip', 'drop_chip1');
+              break;
+            case 15: 
+              new Drop(this, enemy.x, enemy.y, 'drop_chip2', 'chip', 'drop_chip2');
+              break; 
+            case 16: 
+              new Drop(this, enemy.x, enemy.y, 'drop_chip3', 'chip', 'drop_chip3');
+              break;   
+          }
+        }
       }
-      this.player.XP += 2 / this.player.level;
+      this.player.XP += 20 / this.player.level;
       if (this.player.XP >= this.player.maxXP) {
         this.player.levelUP();
       }
       if (enemy.texture.key === 'iceMove') {
         enemy.destroy();
       }
+
+      let isComplete = true;
+      for(let i = 0; i < this.enemys.getChildren().length; i++) {
+        if (this.enemys.getChildren()[i].status === 'alive') {
+          isComplete = false;
+          break;
+        }
+      }
+
+      if (isComplete && this.level === 1) {
+        getlevelTwo(this);
+      }
+      if (isComplete && this.level === 2) {
+        getlevelThree(this);
+      }
+      if (isComplete && this.level === 3) {
+        getlevelFour(this);
+      }
+      if (isComplete && this.level === 4) {
+        getlevelFive(this);
+      }
+      if (isComplete && this.level === 5) {
+        getlevelSix(this);
+      }
+      if (isComplete && this.level === 6) {
+        getlevelSeven(this);
+      }
+      if (isComplete && this.level === 7) {
+        getlevelEight(this);
+      }
+      if (isComplete && this.level === 8) {
+        getlevelNine(this);
+      }
+      if (isComplete && this.level === 9) {
+        getlevelTen(this);
+      }
+      if (isComplete && this.level === 10) {
+        getEndGame(this);
+      }
     }
   }
 
   update() {
-    // console.log('bullets: ', this.bullets.getChildren().length);
-    // console.log('enemys: ', this.enemys.getChildren().length);
-    // console.log('effects: ', this.effects.getChildren().length);
-    // console.log('drop: ', this.drop.getChildren().length);
-
     this.player.controlls();
     for(let i = 0; i < this.enemys.getChildren().length; i++) {
       for(let j = 0; j < this.enemys.getChildren().length; j++) {
@@ -245,7 +431,6 @@ export class GameScene extends Phaser.Scene {
           this.bullets.getChildren()[i].destroy();
         }
       }
-      
     }
     this.interface.update();
   }

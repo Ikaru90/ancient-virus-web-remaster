@@ -25,8 +25,17 @@ export class MenuScene extends Phaser.Scene {
     });
     newGameButton.on('pointerup', () => {
       this.sound.stopAll();
-      this.scene.switch(SCENES.LEVEL_INTRO);
-      this.sound.play('music00', {volume: 0.2});
+      this.scene.switch(SCENES.LEVEL_ONE_INTRO);
+      const random = Math.floor(Math.random() * 3);
+      if (random === 0) {
+        this.sound.play('music00', {volume: 0.2, loop: true});
+      }
+      if (random === 1) {
+        this.sound.play('music01', {volume: 0.2, loop: true});
+      }
+      if (random === 2) {
+        this.sound.play('music02', {volume: 0.2, loop: true});
+      }
     });
 
     creatorsButton.setInteractive();
